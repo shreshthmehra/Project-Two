@@ -1,0 +1,24 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+const url = 'http://ontario.compareschoolrankings.org/secondary/SchoolsByRankLocationName.aspx';
+
+axios.get(url)
+    .then(function (response) {
+        const html = response.data;
+        var $ = cheerio.load(html);
+        var rows = $('table.rating').find("tr");
+        var schoolNameArray = [];
+        var rankingArray = [];
+        for (let i = 2; i < rows.length; i++) { //iterating through the cells in array
+            var currentCell = rows[i]; 
+            var schoolName = $(currentCell).children("td.tdcell:nth-child(4)").text(); //scraping school name data (4th column in table)
+            //console.log(schoolName);
+            schoolNameArray.push(schoolName); //adding school names to array
+            var ranking = $(currentCell).children("td.tdcell:nth-child(6)").text(); //scraping rating data (6th column in table)
+            //console.log(ranking);
+            rankingArray.push(ranking); //adding rankings to array
+        }
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
