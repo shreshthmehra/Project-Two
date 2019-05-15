@@ -1,0 +1,55 @@
+var i,j;
+    var found=false;
+    var name="";
+    var names=[];
+    const axios = require('axios');
+    const cheerio = require('cheerio');
+    const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=43.463965,-80.503410&radius=1500&type=school&key=AIzaSyCdmdRt0brp2wP0xMLHJhTACpJo6cx_b6o';
+
+    axios.get(url)
+    .then(response => {
+        data=response.data;
+        var temp=Object.values(data.results);    
+        
+        for(place_number=0;place_number<20;place_number++)
+        {
+            found=false;
+            var temp4=JSON.stringify(temp[place_number]);
+            console.log(place_number);
+            console.log(temp4);
+                i=0;
+                while(found==false)
+            {
+                        if(temp4.charAt(i)=='n')
+                        {
+                            if(temp4.charAt(i+1)=='a') 
+                        {
+                                if(temp4.charAt(i+2)=='m')
+                            {
+                                    if(temp4.charAt(i+3)=='e')
+                                { 
+                                        found=true;
+                                        name="";
+                                        j=i+7;                        
+                                        while(temp4.charAt(j+1)!=",")
+                                        {
+                                            name=name+temp4.charAt(j);
+                                            j++;
+                                        
+                                        }
+                                        
+                                    }//end of e
+                                }//end of m
+                            }//end of a
+                        }//end of n
+                    i++;
+                }//end of while loop
+                names[place_number]=name;
+            }//end of for loop
+            for(i=0;i<20;i++)console.log(names[i]);
+            
+        })
+
+    .catch(error => {
+        console.log(error);
+    })
